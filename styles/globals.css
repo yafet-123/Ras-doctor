@@ -1,0 +1,15 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.NavbarImage{
+    width:80px;
+    height: 45px;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0 100px;
+}
+
