@@ -12,11 +12,28 @@ import Tab from 'react-bootstrap/Tab';
 import AddMedicalRecord from '../components/addMedicalRecord'
 import MedicalCertificate from '../components/MedicalCertificate'
 import Prescription from '../components/prescription'
+import AddIntrareferral from '../components/addIntrareferral'
+import DisplayIntrareferral from '../components/DisplayIntrareferral'
+import DisplayPrescription from '../components/DisplayPrescription'
+import DisplaySickLeave from '../components/DisplaySickLeave'
+import Addorderimaging from '../components/Addorderimaging'
+import Displayorderimaging from '../components/Displayorderimaging'
+import Cookies from 'universal-cookie';
+import {useAuth} from '../context/AuthContext'
 
 export async function getServerSideProps(context) {
 	const {params,req,res,query} = context
 	const {patient_id_Medical_Record} = params
-	const accesstoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInJvbGUiOjIsInVzZXIiOiJ5YWZldCIsImlhdCI6MTY1NDk2MTA1OSwiZXhwIjoxNjU3NTUzMDU5fQ.R7RiM9OF1XeVW-uba7rIuHT1K9JEp5R-BFTtEW4bgD4"
+	const token = req.cookies.token
+	if (!token) {
+    	return {
+      		redirect: {
+        		destination: '/login',
+        		permanent: false,
+      		},
+      	}
+    }
+	const accesstoken = token
 	const apiURL = "https://hmsapiserver.herokuapp.com/api/v1"
 	const authaxios = axios.create({
 		baseURL : apiURL,
@@ -25,19 +42,31 @@ export async function getServerSideProps(context) {
 		}
 	})
 	const data = await authaxios.get(`${apiURL}/docdashboard/${patient_id_Medical_Record}`)
+	const data1 = await authaxios.get(`${apiURL}/clinic`)
+	const data2 = await authaxios.get(`${apiURL}/intrareferral/${patient_id_Medical_Record}`)
+	const data3 = await authaxios.get(`${apiURL}/prescription/${patient_id_Medical_Record}`)
+	const data4 = await authaxios.get(`${apiURL}/sickleave/${patient_id_Medical_Record}`)
+	const data5 = await authaxios.get(`${apiURL}/radrequest`)
+	const data6 = await authaxios.get(`${apiURL}/orderimaging/${patient_id_Medical_Record}`)
   	return {
     	props: {
 	    	patient:data.data,
+	    	clinic :data1.data,
+	    	intrareferral :data2.data,
+	    	prescription  :data3.data,
+	    	sickleave     :data4.data,
+	    	radrequest    :data5.data,
+	    	orderimaging :data6.data
 	    }, // will be passed to the page component as props
 	}
 }
 
-export default function IndividualPatient({patient}){
-	console.log(patient)
+
+export default function IndividualPatient({patient, clinic, intrareferral, prescription, sickleave, radrequest, orderimaging}){
 	const patientMedicalRecord = patient['all']
 	const ptientMRN = patient['info'].MRN
 	return(
-		<div className="w-100">
+		<div className="w-100 h-100 overflow-hidden">
 			<Header/>
 			<Tab.Container id="left-tabs-example" defaultActiveKey="first">
 	      		<Row>
@@ -53,7 +82,25 @@ export default function IndividualPatient({patient}){
 			              <Nav.Link eventKey="third">Write Prescription</Nav.Link>
 			            </Nav.Item>
 			            <Nav.Item>
-			              <Nav.Link eventKey="fourth">Write sick leave</Nav.Link>
+			              <Nav.Link eventKey="fourth">Display Prescription</Nav.Link>
+			            </Nav.Item>
+			            <Nav.Item>
+			              <Nav.Link eventKey="fifth">Write sick leave</Nav.Link>
+			            </Nav.Item>
+			            <Nav.Item>
+			              <Nav.Link eventKey="sixth">Display sick leave</Nav.Link>
+			            </Nav.Item>
+			            <Nav.Item>
+			              <Nav.Link eventKey="seventh">Write Intra referral</Nav.Link>
+			            </Nav.Item>
+			            <Nav.Item>
+			              <Nav.Link eventKey="eighth">Display Intra referral</Nav.Link>
+			            </Nav.Item>
+			            <Nav.Item>
+			              <Nav.Link eventKey="nineth">Write Order Imaging</Nav.Link>
+			            </Nav.Item>
+			            <Nav.Item>
+			              <Nav.Link eventKey="tenth">Display Order Imaging</Nav.Link>
 			            </Nav.Item>
 			          </Nav>
 			        </Col>
@@ -260,13 +307,38 @@ export default function IndividualPatient({patient}){
 							</Container>
 			            </Tab.Pane>
 			            <Tab.Pane eventKey="second">
-			              <AddMedicalRecord MRN={ptientMRN}/>
+			              <AddMedicalRecord mrn={ptientMRN}/>
 			            </Tab.Pane>
 			            <Tab.Pane eventKey="third">
-			              <Prescription MRN={ptientMRN}/>
+			              <Prescription mrn={ptientMRN}/>
 			            </Tab.Pane>
+
 			            <Tab.Pane eventKey="fourth">
-			              <MedicalCertificate MRN={ptientMRN}/>
+			              <DisplayPrescription prescription={prescription}/>
+			            </Tab.Pane>
+
+			            <Tab.Pane eventKey="fifth">
+			              <MedicalCertificate mrn={ptientMRN}/>
+			            </Tab.Pane>
+
+			            <Tab.Pane eventKey="sixth">
+			              <DisplaySickLeave sickleave={sickleave}/>
+			            </Tab.Pane>
+
+			            <Tab.Pane eventKey="seventh">
+			              <AddIntrareferral mrn={ptientMRN} clinic={clinic} />
+			            </Tab.Pane>
+
+			            <Tab.Pane eventKey="eighth">
+			              <DisplayIntrareferral intrareferral={intrareferral}/>
+			            </Tab.Pane>
+
+			            <Tab.Pane eventKey="nineth">
+			              <Addorderimaging mrn={ptientMRN} radrequest={radrequest}/>
+			            </Tab.Pane>
+
+			            <Tab.Pane eventKey="tenth">
+			              <Displayorderimaging orderimaging={orderimaging}/>
 			            </Tab.Pane>
 			          </Tab.Content>
 			        </Col>

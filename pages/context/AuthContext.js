@@ -1,21 +1,26 @@
-import axios from "axios";
+import React, {useState, useContext, useEffect} from 'react'
+import Cookies from 'universal-cookie';
 
-<AppContext.Provider
-      value={{
-        ...state,
-        displayAlert,
-        loginUser,
-        toggleSidebar,
-        logoutUser,
-        handleChange,
-        clearValues,
-        createJob,
-        getJobs,
-        setEditJob,
-        deleteJob,
-        editJob,
-        search,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+const AuthContext = React.createContext()
+
+export function useAuth(){
+    return useContext(AuthContext)
+}
+
+export default function AuthProvider({children}){
+    const cookies = new Cookies();
+    const accesstoken = cookies.get('token')
+    const currentUser = cookies.get('user')
+    const role = cookies.get('role')
+    
+    const value = {
+        currentUser
+    } 
+    return(
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+
+        // if we are not loading render children
+    )
+}

@@ -10,9 +10,9 @@ import Button from 'react-bootstrap/Button';
 import { AiOutlineSend } from 'react-icons/ai';
 import axios from "axios";
 
-export default function Prescription({MRN}){
+export default function Prescription({mrn}){
 	const router = useRouter();
-   	const [PatientId, setPatientId] = useState(MRN)
+   	const [PatientId, setPatientId] = useState(mrn)
 	const [Medication,setMedication] = useState("")
 	const [Strength,setStrength] = useState("")
 	const [AmountToBeTaken, setAmountToBeTaken] = useState("")
@@ -22,7 +22,7 @@ export default function Prescription({MRN}){
 	const [Refills,setRefills]= useState("")
 	const [Note, setNote] = useState("")
    	const cookies = new Cookies();
-  	const accesstoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInJvbGUiOjIsInVzZXIiOiJ5YWZldCIsImlhdCI6MTY1NTk2NDQ5OSwiZXhwIjoxNjU4NTU2NDk5fQ.HX4esYw9C8aGDgqG7kigAzR4bI-Ulu_ryTQOKNz99ss"
+    const accesstoken = cookies.get('token')
    	const apiURL = "https://hmsapiserver.herokuapp.com/api/v1"
    	const authaxios = axios.create({
       	baseURL : apiURL,
@@ -48,7 +48,7 @@ export default function Prescription({MRN}){
     		IsActive: true
      	}).then(function (response) {
         	console.log(response)
-         	router.push('/patients')
+         	router.reload()
       	}).catch(function (error) {
         	console.log(error);
      	});

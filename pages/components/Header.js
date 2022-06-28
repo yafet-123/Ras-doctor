@@ -10,15 +10,12 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import {BiLogOut} from 'react-icons/bi'
 import Cookies from 'universal-cookie';
 import { useRouter } from 'next/router'
-
+import Image from "next/image"
 export default function Header(){
   	const [User,setUser] = useState("")
 	const cookies = new Cookies();
 	const router = useRouter()
-	useEffect(()=>{
-		setUser(cookies.get('user'))
-	},[])
-
+	
 	const handleSignOut = ()=>{
 		cookies.remove("token", { path: '/' })
 		cookies.remove("user", { path: '/' })
@@ -27,10 +24,17 @@ export default function Header(){
 	}
 	return(
 		<div>
-			<Navbar className="bg-white" expand="lg" fixed="top" sticky="top">
+			<Navbar expand="lg" fixed="top" sticky="top">
 		      	<Container>
 		        	<Navbar.Brand href="#home">
-		        		<img src="./images/logo.png" className="rounded float-start NavbarImage" alt="..." />
+		        		<Image
+        					alt="Mountains"
+        					src="/images/logo.png"
+        					width = {50}
+        					height={50}
+        					className="rounded float-start NavbarImage"
+        					quality={100}
+      					/>
 		        	</Navbar.Brand>
 		        	<Navbar.Toggle aria-controls="basic-navbar-nav" />
 		        	<Navbar.Collapse id="basic-navbar-nav">
@@ -42,7 +46,6 @@ export default function Header(){
 			          	<Nav>
 				            <InputGroup>
 						        <DropdownButton
-						          variant="outline-secondary"
 						          title="Yafet"
 						          id="input-group-dropdown-2"
 						          align="end"
@@ -50,14 +53,7 @@ export default function Header(){
 						          className="text-lg-start text-uppercase w-25 "
 						        >
 						        	<Dropdown.Item href="#" className="d-flex justify-content-between align-items-center">
-						        		<img 
-						        			src="https://i.kinja-img.com/gawker-media/image/upload/gd8ljenaeahpn0wslmlz.jpg" 
-						        			width="50px"
-						        			height="50px"
-						        			className="rounded-circle" 
-						        			alt="..."
-						        		/>
-
+						        		
 						        		Yafet
 						        	</Dropdown.Item>
 						        	<Dropdown.Divider />

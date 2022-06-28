@@ -4,10 +4,17 @@ import { useRef, useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router'
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-
+import Image from "next/image"
+import {useAuth} from './context/AuthContext'
 export default function Login() {
     // we will create the context
     const router = useRouter()
+    const {currentUser} = useAuth()
+    useEffect(()=>{
+        if(currentUser){
+            router.push('/')
+        }
+    },[currentUser, router])
     const cookies = new Cookies();
     const userRef = useRef(); // to set the focus in the first input when the component first load
     const errRef = useRef(); // to set the focus on the error specially for screen reader
@@ -50,17 +57,19 @@ export default function Login() {
     return (
         <div className="w-100 h-100 bg-light">
             <form onSubmit={handleLogin} className="position-absolute top-50 start-50 translate-middle border rounded px-5 pt-2 pb-5">
-                <img
-                    src="/images/logo.png"
-                    width="300px"
-                    height="200px"
-                    className="mx-auto"
-                />
+                <Image
+                            alt="Mountains"
+                            src="/images/logo.png"
+                            width = {320}
+                            height= {200}
+                            className="mx-auto"
+                            quality={100}
+                        />
                 <FloatingLabel controlId="floatingInput" label="Username" className="my-3">
                     <Form.Control 
                         type="text" 
                         ref={userRef}
-                        placeholder="name@example.com" 
+                        placeholder="username" 
                         onChange={(e) => setUsername(e.target.value)}
                         value={username}
                     />

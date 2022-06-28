@@ -9,9 +9,9 @@ import axios from "axios";
 import { useRouter } from 'next/router'
 import Cookies from 'universal-cookie';
 
-export default function AddMedicalRecord({MRN}) {
+export default function AddMedicalRecord({mrn}) {
    const router = useRouter();
-   const [PatientId, setPatientId] = useState(MRN)
+   const [PatientId, setPatientId] = useState(mrn)
    const [Blood_Pressure_BP_,setBlood_Pressure_BP_] = useState("")
    const [Pulse_Rate_PR_,setPulse_Rate_PR_] = useState("")
    const [HistoryNote,setHistoryNote] = useState("")
@@ -39,7 +39,7 @@ export default function AddMedicalRecord({MRN}) {
    const [Progress, setProgress] = useState("")
    const [Management, setManagement] = useState("")
    const cookies = new Cookies();
-   const accesstoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInJvbGUiOjIsInVzZXIiOiJ5YWZldCIsImlhdCI6MTY1NTg3NTc4NSwiZXhwIjoxNjU4NDY3Nzg1fQ.92u5SyBuHaj_1AOzgtN5S-cjTpJyNf1tl3epGW75Ook"
+   const accesstoken = cookies.get('token')
    const apiURL = "https://hmsapiserver.herokuapp.com/api/v1"
    const authaxios = axios.create({
       baseURL : apiURL,
@@ -83,7 +83,7 @@ export default function AddMedicalRecord({MRN}) {
          "IsActive": true
       }).then(function (response) {
          console.log(response)
-         router.push('/patients')
+         router.reload()
       }).catch(function (error) {
          console.log(error);
       });

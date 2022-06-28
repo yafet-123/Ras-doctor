@@ -10,22 +10,22 @@ import axios from "axios";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 
-export default function MedicalCertificate({MRN}) {
+export default function MedicalCertificate({mrn}) {
 	const router = useRouter();
-   	const [PatientId, setPatientId] = useState(MRN)
+   	const [PatientId, setPatientId] = useState(mrn)
 	const [Diagnosis,setDiagnosis] = useState("")
 	const [Recommendation,setRecommendation] = useState("")
 	const [TotalLeaveDays, setTotalLeaveDays] = useState("")
 	const [Clinic,setClinic]= useState(2)
-   	const cookies = new Cookies();
-  	const accesstoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInJvbGUiOjIsInVzZXIiOiJ5YWZldCIsImlhdCI6MTY1NTg3NTc4NSwiZXhwIjoxNjU4NDY3Nzg1fQ.92u5SyBuHaj_1AOzgtN5S-cjTpJyNf1tl3epGW75Ook"
-   	const apiURL = "https://hmsapiserver.herokuapp.com/api/v1"
-   	const authaxios = axios.create({
-      	baseURL : apiURL,
-      	headers :{
-        	Authorization : `Bearer ${accesstoken} `
-      	}
-   	})
+  const cookies = new Cookies();
+	const accesstoken = cookies.get('token')
+  const apiURL = "https://hmsapiserver.herokuapp.com/api/v1"
+  const authaxios = axios.create({
+    baseURL : apiURL,
+    headers :{
+      Authorization : `Bearer ${accesstoken} `
+    }
+  })
     
    	const handlesubmit = async (e)=>{
       	e.preventDefault()
@@ -37,7 +37,7 @@ export default function MedicalCertificate({MRN}) {
     		Clinic: parseInt(Clinic)
      	}).then(function (response) {
         	console.log(response)
-         	router.push('/patients')
+         	router.reload()
       	}).catch(function (error) {
         	console.log(error);
      	});
